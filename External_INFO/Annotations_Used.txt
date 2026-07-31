@@ -156,6 +156,221 @@ Instead of writing the same code in every controller, you write it once inside a
           Returns Error Response
 
 
+@ExceptionHandler – Summary
+Definition
+
+@ExceptionHandler is a Spring annotation used to define a method that handles a specific exception thrown during request processing. It prevents the application from crashing and allows you to return a customized error response.
+
+Purpose
+Handle exceptions gracefully.
+Return meaningful error messages.
+Avoid writing try-catch blocks in every controller.
+Provide consistent HTTP responses to the client.
+How It Works
+
+When an exception is thrown:
+
+Controller
+      │
+      ▼
+Exception Thrown
+      │
+      ▼
+Spring Searches for Matching @ExceptionHandler
+      │
+      ▼
+Matching Method Executes
+      │
+      ▼
+Custom Response Returned
+Basic Syntax
+@ExceptionHandler(ResourceNotFoundException.class)
+public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+
+    return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(ex.getMessage());
+}
+Where Can It Be Used?
+1. Inside a Controller
+
+Handles exceptions only for that specific controller.
+
+@RestController
+public class StudentController {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleException(ResourceNotFoundException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+}
+2. Inside @ControllerAdvice (Recommended)
+
+Handles exceptions globally for all controllers.
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleException(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+}
+Common Exceptions Handled
+ResourceNotFoundException
+DuplicateResourceException
+MethodArgumentNotValidException
+IllegalArgumentException
+NullPointerException
+Exception (Generic)
+Advantages
+Centralized exception handling.
+Cleaner controller code.
+Consistent API error responses.
+Easy to maintain and extend.
+Industry-standard approach for Spring Boot REST APIs.
+Limitation
+
+@ExceptionHandler only handles exceptions that occur after the request reaches the controller.
+
+It cannot handle exceptions thrown in the Spring Security Filter Chain, such as:
+
+CsrfException
+AuthenticationException
+AccessDeniedException
+
+These are handled by Spring Security components like:
+
+AuthenticationEntryPoint
+AccessDeniedHandler
+
+
+
+
+@ResponseStatus – Summary
+Definition
+
+@ResponseStatus is a Spring annotation used to specify the HTTP status code that should be returned in the response.
+
+It can be applied to:
+
+Exception classes (most common)
+Controller methods
+Purpose
+Return a specific HTTP status code.
+Eliminate the need to manually create a ResponseEntity when only the status code is required.
+Make exception-to-status mapping simple and readable.
+How It Works
+
+When Spring encounters an exception or executes a controller method annotated with @ResponseStatus, it automatically sets the specified HTTP status code in the response.
+
+Client
+   │
+   ▼
+Controller
+   │
+   ▼
+Exception Thrown
+   │
+   ▼
+@ResponseStatus Found
+   │
+   ▼
+Spring Sets HTTP Status
+   │
+   ▼
+Response Sent
+Syntax
+On an Exception Class
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException {
+
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
+
+Now, whenever this exception is thrown:
+
+throw new ResourceNotFoundException("Student not found");
+
+Spring automatically returns:
+
+HTTP/1.1 404 Not Found
+On a Controller Method
+@PostMapping("/students")
+@ResponseStatus(HttpStatus.CREATED)
+public Student createStudent(@RequestBody Student student) {
+    return service.save(student);
+}
+
+Spring returns:
+
+HTTP/1.1 201 Created
+Common HTTP Status Codes
+Status	Meaning
+HttpStatus.OK	200 OK
+HttpStatus.CREATED	201 Created
+HttpStatus.NO_CONTENT	204 No Content
+HttpStatus.BAD_REQUEST	400 Bad Request
+HttpStatus.UNAUTHORIZED	401 Unauthorized
+HttpStatus.FORBIDDEN	403 Forbidden
+HttpStatus.NOT_FOUND	404 Not Found
+HttpStatus.CONFLICT	409 Conflict
+HttpStatus.INTERNAL_SERVER_ERROR	500 Internal Server Error
+@ResponseStatus vs ResponseEntity
+Using @ResponseStatus
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException {
+}
+
+✔ Automatically returns 404 Not Found.
+
+Using ResponseEntity
+return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body("Student not found");
+
+✔ Returns both the status code and a custom response body.
+
+When to Use @ResponseStatus
+
+Use it when:
+
+Only the HTTP status needs to be specified.
+The response body is simple or handled elsewhere.
+Creating custom exception classes with a fixed status code.
+When Not to Use It
+
+Avoid relying on it when:
+
+You need a custom JSON error response.
+You want to include timestamps, error codes, request paths, or validation details.
+You need dynamic status codes.
+
+In these cases, prefer:
+
+@ExceptionHandler
+
+with
+
+ResponseEntity
+Advantages
+Simple and concise.
+Automatically maps exceptions to HTTP status codes.
+Reduces boilerplate code.
+Improves readability.
+Limitations
+Returns only a fixed HTTP status.
+Cannot easily create detailed custom error responses.
+Less flexible than ResponseEntity.
+Interview Definition
+
+@ResponseStatus is a Spring annotation used to specify the HTTP status code that should be returned for a controller method or an exception class. It allows Spring to automatically send the appropriate HTTP response status without manually creating a ResponseEntity.
+
+One-Line Summary
+
+@ResponseStatus tells Spring which HTTP status code to return when a controller method executes successfully or when a specific exception is thrown.
 
 
 
