@@ -156,6 +156,94 @@ Instead of writing the same code in every controller, you write it once inside a
           Returns Error Response
 
 
+@ExceptionHandler – Summary
+Definition
+
+@ExceptionHandler is a Spring annotation used to define a method that handles a specific exception thrown during request processing. It prevents the application from crashing and allows you to return a customized error response.
+
+Purpose
+Handle exceptions gracefully.
+Return meaningful error messages.
+Avoid writing try-catch blocks in every controller.
+Provide consistent HTTP responses to the client.
+How It Works
+
+When an exception is thrown:
+
+Controller
+      │
+      ▼
+Exception Thrown
+      │
+      ▼
+Spring Searches for Matching @ExceptionHandler
+      │
+      ▼
+Matching Method Executes
+      │
+      ▼
+Custom Response Returned
+Basic Syntax
+@ExceptionHandler(ResourceNotFoundException.class)
+public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+
+    return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(ex.getMessage());
+}
+Where Can It Be Used?
+1. Inside a Controller
+
+Handles exceptions only for that specific controller.
+
+@RestController
+public class StudentController {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleException(ResourceNotFoundException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+}
+2. Inside @ControllerAdvice (Recommended)
+
+Handles exceptions globally for all controllers.
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleException(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+}
+Common Exceptions Handled
+ResourceNotFoundException
+DuplicateResourceException
+MethodArgumentNotValidException
+IllegalArgumentException
+NullPointerException
+Exception (Generic)
+Advantages
+Centralized exception handling.
+Cleaner controller code.
+Consistent API error responses.
+Easy to maintain and extend.
+Industry-standard approach for Spring Boot REST APIs.
+Limitation
+
+@ExceptionHandler only handles exceptions that occur after the request reaches the controller.
+
+It cannot handle exceptions thrown in the Spring Security Filter Chain, such as:
+
+CsrfException
+AuthenticationException
+AccessDeniedException
+
+These are handled by Spring Security components like:
+
+AuthenticationEntryPoint
+AccessDeniedHandler
+
 
 
 
