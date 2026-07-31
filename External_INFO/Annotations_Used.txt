@@ -128,6 +128,32 @@ Without this annotation, Spring Security won't activate your custom security con
 
 
 
+----------------------------------------------------------------------------------------------------------------------------------X
+
+What is @ControllerAdvice?
+
+Definition:
+
+@ControllerAdvice is a Spring annotation that creates a global class whose methods apply to all controllers in the application.
+
+Think of it as a central control room for your controllers.
+
+Instead of writing the same code in every controller, you write it once inside a class annotated with @ControllerAdvice.
+
+
+                Client
+                  |
+          StudentController
+                  |
+              Service
+                  |
+             throws Exception
+                  |
+        -----------------------
+        |  @ControllerAdvice  |
+        -----------------------
+                  |
+          Returns Error Response
 
 
 
