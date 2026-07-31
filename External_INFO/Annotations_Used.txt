@@ -1,0 +1,137 @@
+Starting class annotations : also called Main Class or Bootstrapping Class.
+
+@SpringBootApplication :
+
+This is the main annotation in a Spring Boot application. 
+It tells Spring Boot => "This is the starting point of my Spring Boot application. 
+Configure everything automatically and start the application."
+
+It combines three annotations into one:
+
+1. @Configuration :
+
+This tells Spring:
+
+"This class contains configuration for the Spring application."
+Spring, read this class while setting up the application."
+
+2. @EnableAutoConfiguration :
+
+It tells Spring Boot:
+
+"Automatically configure the application based on the dependencies present in pom.xml."
+
+3. @ComponentScan :
+
+This tells Spring:
+
+"Search for Spring components in this package and all its sub-packages."
+When the application starts:
+Spring automatically scans:
+
+@Controller
+@RestController
+@Service
+@Repository
+@Component
+
+and creates their objects (beans) in the Spring IoC Container.
+
+
+--------------------------------------------------------------------------------------------------------------------X
+
+Entity Class Annotations : 
+
+
+@Entity : 
+
+"This Java class represents a database table."
+Normally, a Java class is just an object in memory.
+Hibernate does not know that this class should be stored in the database.
+
+When you add: @Entity
+Hibernate understands:
+
+"This class should be mapped to a database table."
+
+
+@Table(value = "table name"):
+
+This annotation is given exactly after the @Entity . It is used to give the custom name to the entity table.
+
+@Id : 
+
+@Id is a JPA annotation used to identify the Primary Key of an entity.
+
+It tells Hibernate:
+
+"This field uniquely identifies each record in the database table."
+
+
+@GeneratedValue(strategy = GenerationType.AUTO) : 
+
+It is a JPA/Hibernate annotation used with the @Id field to tell Hibernate
+ how the primary key should be generated automatically.
+
+@GeneratedValue : 
+
+This annotation tells JPA:
+
+"The value of this primary key should be generated automatically."
+
+Without it, you must provide the ID yourself.
+
+strategy = GenerationType.AUTO :
+
+This tells Hibernate:
+
+"Choose the best ID generation strategy depending on the database."
+
+Hibernate decides whether to use:
+
+Identity columns
+Sequences
+Tables
+Any other mechanism supported by the database
+
+You don't need to worry about the implementation.
+
+
+
+@Column(nullable = false) : 
+
+It means:
+
+"This field is mandatory. Every record must have a value for this column."
+
+If someone tries to save an entity without providing a value, the database will reject it.
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------X
+
+Configuration Class Annotations 
+
+@Configuration
+
+"This class contains configuration (setup instructions) for the Spring application. 
+Read this class and create/manage the beans defined inside it."
+
+
+@EnableWebSecurity 
+
+@EnableWebSecurity tells Spring Boot:
+
+"Enable Spring Security for this application and use my custom security configuration."
+
+Without this annotation, Spring Security won't activate your custom security configuration.
+
+
+
+
+
+
+
+
+
+
