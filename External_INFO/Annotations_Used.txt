@@ -1,287 +1,497 @@
-Starting class annotations : also called Main Class or Bootstrapping Class.
+# Spring Boot Annotations Notes
 
-@SpringBootApplication :
+## 1. Starting Class Annotations
 
-This is the main annotation in a Spring Boot application. 
-It tells Spring Boot => "This is the starting point of my Spring Boot application. 
-Configure everything automatically and start the application."
+Also called the **Main Class** or **Bootstrapping Class**.
 
-It combines three annotations into one:
+### `@SpringBootApplication`
 
-1. @Configuration :
-
-This tells Spring:
-
-"This class contains configuration for the Spring application."
-Spring, read this class while setting up the application."
-
-2. @EnableAutoConfiguration :
+This is the main annotation in a Spring Boot application.
 
 It tells Spring Boot:
 
-"Automatically configure the application based on the dependencies present in pom.xml."
+> "This is the starting point of my Spring Boot application. Configure everything automatically and start the application."
 
-3. @ComponentScan :
+It combines three annotations into one:
+
+### 1. `@Configuration`
 
 This tells Spring:
 
-"Search for Spring components in this package and all its sub-packages."
-When the application starts:
-Spring automatically scans:
+> "This class contains configuration for the Spring application. Spring, read this class while setting up the application."
 
-@Controller
-@RestController
-@Service
-@Repository
-@Component
+### 2. `@EnableAutoConfiguration`
 
-and creates their objects (beans) in the Spring IoC Container.
+It tells Spring Boot:
 
+> "Automatically configure the application based on the dependencies present in `pom.xml`."
 
---------------------------------------------------------------------------------------------------------------------X
+### 3. `@ComponentScan`
 
-Entity Class Annotations : 
+This tells Spring:
 
+> "Search for Spring components in this package and all its sub-packages."
 
-@Entity : 
+When the application starts, Spring automatically scans:
 
-"This Java class represents a database table."
-Normally, a Java class is just an object in memory.
-Hibernate does not know that this class should be stored in the database.
+* `@Controller`
+* `@RestController`
+* `@Service`
+* `@Repository`
+* `@Component`
 
-When you add: @Entity
-Hibernate understands:
+and creates their objects (**beans**) in the **Spring IoC Container**.
 
-"This class should be mapped to a database table."
+---
 
+# 2. Entity Class Annotations
 
-@Table(value = "table name"):
+## `@Entity`
 
-This annotation is given exactly after the @Entity . It is used to give the custom name to the entity table.
-
-@Id : 
-
-@Id is a JPA annotation used to identify the Primary Key of an entity.
+`@Entity` is a JPA annotation used to mark a Java class as an entity.
 
 It tells Hibernate:
 
-"This field uniquely identifies each record in the database table."
+> "This Java class represents a database table."
 
+Normally, a Java class is just an object in memory. Hibernate does not know that this class should be stored in the database.
 
-@GeneratedValue(strategy = GenerationType.AUTO) : 
+When you add:
 
-It is a JPA/Hibernate annotation used with the @Id field to tell Hibernate
- how the primary key should be generated automatically.
+```java
+@Entity
+```
 
-@GeneratedValue : 
+Hibernate understands:
+
+> "This class should be mapped to a database table."
+
+---
+
+## `@Table(value = "table_name")`
+
+This annotation is generally placed after `@Entity`.
+
+It is used to give a **custom name to the entity table**.
+
+Example:
+
+```java
+@Entity
+@Table(value = "students")
+public class Student {
+}
+```
+
+Here, the `Student` entity is mapped to the `students` database table.
+
+---
+
+## `@Id`
+
+`@Id` is a JPA annotation used to identify the **Primary Key** of an entity.
+
+It tells Hibernate:
+
+> "This field uniquely identifies each record in the database table."
+
+Example:
+
+```java
+@Id
+private Long studentId;
+```
+
+Here, `studentId` is the primary key.
+
+---
+
+## `@GeneratedValue(strategy = GenerationType.AUTO)`
+
+This is a JPA/Hibernate annotation used with the `@Id` field to tell Hibernate how the primary key should be generated automatically.
+
+### `@GeneratedValue`
 
 This annotation tells JPA:
 
-"The value of this primary key should be generated automatically."
+> "The value of this primary key should be generated automatically."
 
 Without it, you must provide the ID yourself.
 
-strategy = GenerationType.AUTO :
+### `strategy = GenerationType.AUTO`
 
 This tells Hibernate:
 
-"Choose the best ID generation strategy depending on the database."
+> "Choose the appropriate ID generation strategy depending on the database and configuration."
 
-Hibernate decides whether to use:
+Hibernate may use mechanisms such as:
 
-Identity columns
-Sequences
-Tables
-Any other mechanism supported by the database
+* Identity columns
+* Sequences
+* Tables
+* Other supported mechanisms
 
-You don't need to worry about the implementation.
+You generally do not need to worry about the underlying implementation when using `AUTO`.
 
+Example:
 
+```java
+@Id
+@GeneratedValue(strategy = GenerationType.AUTO)
+private Long studentId;
+```
 
-@Column(nullable = false) : 
+---
+
+## `@Column(nullable = false)`
+
+This tells JPA that the corresponding database column should **not allow `NULL` values**.
 
 It means:
 
-"This field is mandatory. Every record must have a value for this column."
+> "This field is mandatory. Every record must have a value for this column."
 
-If someone tries to save an entity without providing a value, the database will reject it.
+Example:
 
+```java
+@Column(nullable = false)
+private String studentName;
+```
 
+If a record is saved without a value for this column, the database constraint can reject the operation.
 
--------------------------------------------------------------------------------------------------------------------------------X
+---
 
-Configuration Class Annotations 
+# 3. Configuration Class Annotations
 
+## `@Configuration`
+
+`@Configuration` is used to mark a class as a **configuration class**.
+
+It tells Spring:
+
+> "This class contains configuration (setup instructions) for the Spring application. Read this class and create/manage the beans defined inside it."
+
+Example:
+
+```java
 @Configuration
+public class AppConfig {
 
-"This class contains configuration (setup instructions) for the Spring application. 
-Read this class and create/manage the beans defined inside it."
+}
+```
 
+Configuration classes are commonly used to define beans using `@Bean`.
 
-@EnableWebSecurity 
+---
 
-@EnableWebSecurity tells Spring Boot:
+## `@EnableWebSecurity`
 
-"Enable Spring Security for this application and use my custom security configuration."
+`@EnableWebSecurity` is a Spring Security annotation.
 
-Without this annotation, Spring Security won't activate your custom security configuration.
+It tells Spring:
 
+> "Enable Spring Security for this application and use my custom security configuration."
 
+It is commonly used in a security configuration class where you configure things such as:
 
-----------------------------------------------------------------------------------------------------------------------------------X
+* Authentication
+* Authorization
+* Security filters
+* Login configuration
+* CSRF configuration
+* Password encoding
 
-What is @ControllerAdvice?
+Example:
 
-Definition:
+```java
+@EnableWebSecurity
+@Configuration
+public class SecurityConfig {
 
-@ControllerAdvice is a Spring annotation that creates a global class whose methods apply to all controllers in the application.
+}
+```
 
-Think of it as a central control room for your controllers.
+---
 
-Instead of writing the same code in every controller, you write it once inside a class annotated with @ControllerAdvice.
+# 4. Global Exception Handling
 
+## `@ControllerAdvice`
 
-                Client
-                  |
-          StudentController
-                  |
-              Service
-                  |
-             throws Exception
-                  |
-        -----------------------
-        |  @ControllerAdvice  |
-        -----------------------
-                  |
-          Returns Error Response
+### Definition
 
+`@ControllerAdvice` is a Spring annotation that creates a **global class whose methods can apply to all controllers in the application**.
 
-@ExceptionHandler – Summary
-Definition
+Think of it as a **central control room for your controllers**.
 
-@ExceptionHandler is a Spring annotation used to define a method that handles a specific exception thrown during request processing. It prevents the application from crashing and allows you to return a customized error response.
+Instead of writing the same exception-handling code in every controller, you write it once inside a class annotated with `@ControllerAdvice`.
 
-Purpose
-Handle exceptions gracefully.
-Return meaningful error messages.
-Avoid writing try-catch blocks in every controller.
-Provide consistent HTTP responses to the client.
-How It Works
+### Flow
+
+```text
+Client
+  |
+  v
+StudentController
+  |
+  v
+Service
+  |
+  v
+throws Exception
+  |
+  v
+-----------------------
+|  @ControllerAdvice  |
+-----------------------
+  |
+  v
+Returns Error Response
+```
+
+### Example
+
+```java
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+}
+```
+
+---
+
+# 5. `@ExceptionHandler`
+
+## Definition
+
+`@ExceptionHandler` is a Spring annotation used to define a method that handles a **specific exception** thrown during request processing.
+
+It allows you to handle exceptions gracefully and return a customized error response.
+
+### Purpose
+
+* Handle exceptions gracefully.
+* Return meaningful error messages.
+* Avoid writing `try-catch` blocks in every controller.
+* Provide consistent HTTP responses to the client.
+* Centralize exception-handling logic.
+
+---
+
+## How It Works
 
 When an exception is thrown:
 
+```text
 Controller
-      │
-      ▼
+    |
+    v
 Exception Thrown
-      │
-      ▼
+    |
+    v
 Spring Searches for Matching @ExceptionHandler
-      │
-      ▼
+    |
+    v
 Matching Method Executes
-      │
-      ▼
+    |
+    v
 Custom Response Returned
-Basic Syntax
+```
+
+---
+
+## Basic Syntax
+
+```java
 @ExceptionHandler(ResourceNotFoundException.class)
-public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+public ResponseEntity<String> handleResourceNotFound(
+        ResourceNotFoundException ex) {
 
     return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(ex.getMessage());
 }
-Where Can It Be Used?
-1. Inside a Controller
+```
 
-Handles exceptions only for that specific controller.
+Here:
 
+```java
+@ExceptionHandler(ResourceNotFoundException.class)
+```
+
+means:
+
+> "When `ResourceNotFoundException` occurs, execute this method."
+
+---
+
+# 6. Where Can `@ExceptionHandler` Be Used?
+
+## 1. Inside a Controller
+
+When placed inside a controller, it handles exceptions **only for that specific controller**.
+
+Example:
+
+```java
 @RestController
 public class StudentController {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleException(ResourceNotFoundException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<String> handleException(
+            ResourceNotFoundException ex) {
+
+        return ResponseEntity
+                .badRequest()
+                .body(ex.getMessage());
     }
 }
-2. Inside @ControllerAdvice (Recommended)
+```
 
-Handles exceptions globally for all controllers.
+---
 
+## 2. Inside `@ControllerAdvice` — Recommended
+
+When placed inside a class annotated with `@ControllerAdvice`, it can handle exceptions **globally across controllers**.
+
+Example:
+
+```java
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleException(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<String> handleException(
+            ResourceNotFoundException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
     }
 }
-Common Exceptions Handled
-ResourceNotFoundException
-DuplicateResourceException
-MethodArgumentNotValidException
-IllegalArgumentException
-NullPointerException
-Exception (Generic)
-Advantages
-Centralized exception handling.
-Cleaner controller code.
-Consistent API error responses.
-Easy to maintain and extend.
-Industry-standard approach for Spring Boot REST APIs.
-Limitation
+```
 
-@ExceptionHandler only handles exceptions that occur after the request reaches the controller.
+This approach is generally preferred for centralized exception handling.
 
-It cannot handle exceptions thrown in the Spring Security Filter Chain, such as:
+---
 
-CsrfException
-AuthenticationException
-AccessDeniedException
+# 7. Common Exceptions Handled
 
-These are handled by Spring Security components like:
+Examples include:
 
-AuthenticationEntryPoint
-AccessDeniedHandler
+* `ResourceNotFoundException`
+* `DuplicateResourceException`
+* `MethodArgumentNotValidException`
+* `IllegalArgumentException`
+* `NullPointerException`
+* `Exception` — Generic fallback
 
+---
 
+# 8. Advantages of `@ExceptionHandler`
 
+* Centralized exception handling.
+* Cleaner controller code.
+* Consistent API error responses.
+* Easy to maintain and extend.
+* Useful for building industry-standard Spring Boot REST APIs.
 
-@ResponseStatus – Summary
-Definition
+---
 
-@ResponseStatus is a Spring annotation used to specify the HTTP status code that should be returned in the response.
+# 9. Limitation of `@ExceptionHandler`
+
+`@ExceptionHandler` primarily handles exceptions that occur during **controller/request processing**.
+
+It does not normally handle exceptions that are thrown inside the **Spring Security Filter Chain**, such as:
+
+* `CsrfException`
+* `AuthenticationException`
+* `AccessDeniedException`
+
+These are generally handled by Spring Security components such as:
+
+* `AuthenticationEntryPoint`
+* `AccessDeniedHandler`
+
+### Important Concept
+
+```text
+HTTP Request
+     |
+     v
+Spring Security Filter Chain
+     |
+     |---- AuthenticationException
+     |---- AccessDeniedException
+     |---- CSRF-related exception
+     |
+     v
+Controller
+     |
+     |---- Application Exception
+     |
+     v
+@ControllerAdvice
+     |
+     v
+@ExceptionHandler
+```
+
+---
+
+# 10. `@ResponseStatus`
+
+## Definition
+
+`@ResponseStatus` is a Spring annotation used to specify the **HTTP status code** that should be returned in the response.
 
 It can be applied to:
 
-Exception classes (most common)
-Controller methods
-Purpose
-Return a specific HTTP status code.
-Eliminate the need to manually create a ResponseEntity when only the status code is required.
-Make exception-to-status mapping simple and readable.
-How It Works
+* Exception classes
+* Controller methods
 
-When Spring encounters an exception or executes a controller method annotated with @ResponseStatus, it automatically sets the specified HTTP status code in the response.
+---
 
+## Purpose
+
+* Return a specific HTTP status code.
+* Eliminate the need to manually create a `ResponseEntity` when only the status code is required.
+* Make exception-to-status mapping simple and readable.
+
+---
+
+# 11. How `@ResponseStatus` Works
+
+When Spring encounters an exception or executes a controller method annotated with `@ResponseStatus`, it automatically sets the specified HTTP status code in the response.
+
+### Flow
+
+```text
 Client
-   │
-   ▼
+  |
+  v
 Controller
-   │
-   ▼
+  |
+  v
 Exception Thrown
-   │
-   ▼
+  |
+  v
 @ResponseStatus Found
-   │
-   ▼
+  |
+  v
 Spring Sets HTTP Status
-   │
-   ▼
+  |
+  v
 Response Sent
-Syntax
-On an Exception Class
+```
+
+---
+
+# 12. `@ResponseStatus` on an Exception Class
+
+Example:
+
+```java
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {
 
@@ -289,90 +499,315 @@ public class ResourceNotFoundException extends RuntimeException {
         super(message);
     }
 }
+```
 
 Now, whenever this exception is thrown:
 
+```java
 throw new ResourceNotFoundException("Student not found");
+```
 
-Spring automatically returns:
+Spring can return:
 
+```text
 HTTP/1.1 404 Not Found
-On a Controller Method
+```
+
+---
+
+# 13. `@ResponseStatus` on a Controller Method
+
+Example:
+
+```java
 @PostMapping("/students")
 @ResponseStatus(HttpStatus.CREATED)
 public Student createStudent(@RequestBody Student student) {
+
     return service.save(student);
 }
+```
 
 Spring returns:
 
+```text
 HTTP/1.1 201 Created
-Common HTTP Status Codes
-Status	Meaning
-HttpStatus.OK	200 OK
-HttpStatus.CREATED	201 Created
-HttpStatus.NO_CONTENT	204 No Content
-HttpStatus.BAD_REQUEST	400 Bad Request
-HttpStatus.UNAUTHORIZED	401 Unauthorized
-HttpStatus.FORBIDDEN	403 Forbidden
-HttpStatus.NOT_FOUND	404 Not Found
-HttpStatus.CONFLICT	409 Conflict
-HttpStatus.INTERNAL_SERVER_ERROR	500 Internal Server Error
-@ResponseStatus vs ResponseEntity
-Using @ResponseStatus
+```
+
+This is useful when the method should always return a particular status code.
+
+---
+
+# 14. Common HTTP Status Codes
+
+| Status                             | Meaning                   |
+| ---------------------------------- | ------------------------- |
+| `HttpStatus.OK`                    | 200 OK                    |
+| `HttpStatus.CREATED`               | 201 Created               |
+| `HttpStatus.NO_CONTENT`            | 204 No Content            |
+| `HttpStatus.BAD_REQUEST`           | 400 Bad Request           |
+| `HttpStatus.UNAUTHORIZED`          | 401 Unauthorized          |
+| `HttpStatus.FORBIDDEN`             | 403 Forbidden             |
+| `HttpStatus.NOT_FOUND`             | 404 Not Found             |
+| `HttpStatus.CONFLICT`              | 409 Conflict              |
+| `HttpStatus.INTERNAL_SERVER_ERROR` | 500 Internal Server Error |
+
+---
+
+# 15. `@ResponseStatus` vs `ResponseEntity`
+
+## Using `@ResponseStatus`
+
+```java
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {
 }
+```
 
-✔ Automatically returns 404 Not Found.
+### Result
 
-Using ResponseEntity
+Spring automatically uses:
+
+```text
+404 Not Found
+```
+
+---
+
+## Using `ResponseEntity`
+
+```java
 return ResponseEntity
         .status(HttpStatus.NOT_FOUND)
         .body("Student not found");
+```
 
-✔ Returns both the status code and a custom response body.
+### Result
 
-When to Use @ResponseStatus
+You can control both:
 
-Use it when:
+* HTTP status code
+* Response body
 
-Only the HTTP status needs to be specified.
-The response body is simple or handled elsewhere.
-Creating custom exception classes with a fixed status code.
-When Not to Use It
+For example:
 
-Avoid relying on it when:
+```text
+Status: 404 Not Found
 
-You need a custom JSON error response.
-You want to include timestamps, error codes, request paths, or validation details.
-You need dynamic status codes.
+Body:
+Student not found
+```
+
+---
+
+# 16. When to Use `@ResponseStatus`
+
+Use `@ResponseStatus` when:
+
+* Only the HTTP status needs to be specified.
+* The status is fixed.
+* Creating custom exception classes with a fixed status code.
+* You want a simple and concise solution.
+
+Example:
+
+```java
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class StudentNotFoundException extends RuntimeException {
+}
+```
+
+---
+
+# 17. When Not to Use `@ResponseStatus`
+
+Avoid relying only on `@ResponseStatus` when:
+
+* You need a custom JSON error response.
+* You want to include timestamps.
+* You need error codes.
+* You need the request path.
+* You need validation details.
+* You need dynamic status codes.
 
 In these cases, prefer:
 
+```java
 @ExceptionHandler
+```
 
-with
+together with:
+
+```java
+ResponseEntity
+```
+
+---
+
+# 18. Advantages of `@ResponseStatus`
+
+* Simple and concise.
+* Automatically maps exceptions to HTTP status codes.
+* Reduces boilerplate code.
+* Improves readability.
+* Useful for exceptions with a fixed HTTP status.
+
+---
+
+# 19. Limitations of `@ResponseStatus`
+
+* Returns a fixed HTTP status.
+* Less flexible than `ResponseEntity`.
+* Not suitable for complex custom error responses.
+* Cannot easily provide dynamic response information.
+
+For detailed API error responses, `ResponseEntity` is usually more flexible.
+
+---
+
+# 20. Interview Definitions
+
+## `@SpringBootApplication`
+
+> `@SpringBootApplication` is the main Spring Boot annotation that combines `@Configuration`, `@EnableAutoConfiguration`, and `@ComponentScan` to configure and bootstrap a Spring Boot application.
+
+---
+
+## `@Entity`
+
+> `@Entity` is a JPA annotation that tells Hibernate that a Java class should be mapped to a database table.
+
+---
+
+## `@Table`
+
+> `@Table` is a JPA annotation used to specify the database table name to which an entity is mapped.
+
+---
+
+## `@Id`
+
+> `@Id` identifies the primary key of a JPA entity.
+
+---
+
+## `@GeneratedValue`
+
+> `@GeneratedValue` tells JPA that the primary key value should be generated automatically.
+
+---
+
+## `@Column(nullable = false)`
+
+> `@Column(nullable = false)` specifies that the corresponding database column should not allow null values.
+
+---
+
+## `@Configuration`
+
+> `@Configuration` tells Spring that a class contains configuration and bean definitions for the application.
+
+---
+
+## `@EnableWebSecurity`
+
+> `@EnableWebSecurity` enables Spring Security's web security configuration and allows custom security configuration to be applied.
+
+---
+
+## `@ControllerAdvice`
+
+> `@ControllerAdvice` provides centralized exception handling and other controller-related functionality across multiple controllers.
+
+---
+
+## `@ExceptionHandler`
+
+> `@ExceptionHandler` defines a method that handles a specific exception thrown during request processing.
+
+---
+
+## `@ResponseStatus`
+
+> `@ResponseStatus` specifies the HTTP status code that Spring should return for a controller method or exception.
+
+---
+
+# 21. Quick Revision
+
+```text
+@SpringBootApplication
+        |
+        +---- @Configuration
+        |
+        +---- @EnableAutoConfiguration
+        |
+        +---- @ComponentScan
+
+
+@Entity
+        |
+        +---- Java class → Database Table
+
+@Table
+        |
+        +---- Custom Table Name
+
+@Id
+        |
+        +---- Primary Key
+
+@GeneratedValue
+        |
+        +---- Automatically Generate ID
+
+@Column(nullable = false)
+        |
+        +---- Column Cannot Be NULL
+
+
+@Configuration
+        |
+        +---- Configuration / Bean Setup
+
+@EnableWebSecurity
+        |
+        +---- Enable Spring Security
+
+
+@ControllerAdvice
+        |
+        +---- Global Controller-Level Exception Handling
+
+@ExceptionHandler
+        |
+        +---- Handle Specific Exceptions
+
+@ResponseStatus
+        |
+        +---- Set HTTP Status Code
+```
+
+## Key Difference to Remember
+
+```text
+@ControllerAdvice
+        ↓
+Global exception-handling class
+
+@ExceptionHandler
+        ↓
+Handles a specific exception
+
+@ResponseStatus
+        ↓
+Specifies the HTTP status code
 
 ResponseEntity
-Advantages
-Simple and concise.
-Automatically maps exceptions to HTTP status codes.
-Reduces boilerplate code.
-Improves readability.
-Limitations
-Returns only a fixed HTTP status.
-Cannot easily create detailed custom error responses.
-Less flexible than ResponseEntity.
-Interview Definition
+        ↓
+Controls status + headers + response body
+```
 
-@ResponseStatus is a Spring annotation used to specify the HTTP status code that should be returned for a controller method or an exception class. It allows Spring to automatically send the appropriate HTTP response status without manually creating a ResponseEntity.
+### One-Line Summary
 
-One-Line Summary
-
-@ResponseStatus tells Spring which HTTP status code to return when a controller method executes successfully or when a specific exception is thrown.
-
-
-
-
-
+> `@SpringBootApplication` starts and configures the application, entity annotations map Java objects to database tables, configuration/security annotations configure the application infrastructure, and exception-handling annotations manage errors and HTTP responses.
