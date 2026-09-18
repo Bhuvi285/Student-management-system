@@ -16,4 +16,9 @@ public class CourseController {
 		model.addAttribute("courseDto" , new CourseDTO());
 		return "add-course";
 	}
+	
+	@GetMapping("/list")
+	public String listCourse() {
+		return "courses";
+	}
 }
