@@ -1,5 +1,4 @@
-:::writing{variant="document" id="58321" title="How Spring MVC Resolves login.html from return \"login\""}
-# How Spring MVC Resolves `login.html` from `return "login"`
+# How Spring MVC Resolves `login.html` from `return "login" in Controller ?`
 
 Yes. In your code:
 
