@@ -11,7 +11,8 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class Users {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)   // automatic generation of primary key based on the Auto feature selection 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)   // automatic generation of primary key based on the Auto feature selection
+															// AUTO lets the persistence provider (like Hibernate) choose, while IDENTITY forces the use of the database's auto-increment feature.
 	private Long id;
 	
 	@Column(nullable = false , unique = true)  // This field is mandatory. Every record must have a value for this column.If someone tries to save an entity without providing a value, the database will reject it.
