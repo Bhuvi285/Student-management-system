@@ -1,5 +1,7 @@
 package com.bsn.studentmanagement.service.impl;
 
-public interface CourseService {
+import com.bsn.studentmanagement.dto.CourseDTO;
 
+public interface CourseService {
+    CourseDTO createCourse(CourseDTO courseDTO);
 }
