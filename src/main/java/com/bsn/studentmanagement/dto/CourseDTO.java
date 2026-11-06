@@ -20,7 +20,13 @@ public class CourseDTO {
 	
 	@NotBlank(message = "Course duration is required.")
 	private String Duration;
+
+	@NotBlank(message = "Course Fee is required.")
+	private BigDecimal fee;
 	
+	@Size(max = 500,message = "Max of 500 characters allowed.")
+	private String description;
+
 	public Long getId() {
 		return id;
 	}
@@ -68,11 +74,5 @@ public class CourseDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	@NotBlank(message = "Course Fee is required.")
-	private BigDecimal fee;
-	
-	@Size(max = 500,message = "Max of 500 characters allowed.")
-	private String description;
 	
 }
