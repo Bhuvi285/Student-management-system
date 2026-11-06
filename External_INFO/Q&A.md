@@ -1,4 +1,4 @@
-# How Spring MVC Resolves `login.html` from `return "login" in Controller ?`
+# How Spring MVC Resolves `login.html` from `return "login"` in Controller?
 
 Yes. In your code:
 
@@ -9,7 +9,7 @@ public String login() {
 }
 ```
 
-the controller does **not directly render `login.html` by itself**.
+The controller does **not directly render `login.html` by itself**.
 
 The reason `"login"` is enough is because of **Spring MVC's View Resolver**, usually combined with **Thymeleaf**.
 
@@ -148,6 +148,113 @@ templates/login.html
 
 ---
 
+## What is `Model model` in Spring MVC?
+
+While working with Spring MVC controllers, you may have seen a method like this:
+
+```java
+@GetMapping("/courses")
+public String showCourses(Model model) {
+
+    model.addAttribute("courses", courseService.getAllCourses());
+
+    return "courses";
+}
+```
+
+Here, `Model` is an **interface provided by Spring MVC**, not your application's Model or Entity class.
+
+It is used to transfer data from the **Controller to the View (HTML page)**.
+
+Import:
+
+```java
+import org.springframework.ui.Model;
+```
+
+### Understanding `Model model`
+
+- **Model:** Spring MVC interface.
+- **model:** Reference variable automatically provided by Spring.
+- **addAttribute():** Adds data to the Model so that the View can access it.
+- **"courses":** Attribute name used to access the data in the HTML page.
+
+### How does it work?
+
+```text
+Controller
+   |
+   | model.addAttribute("courses", data)
+   ↓
+Spring MVC Model
+   |
+   | Carries data
+   ↓
+Thymeleaf View
+   |
+   ↓
+courses.html
+   |
+   ↓
+Displays course information
+```
+
+### Example: Accessing Model data in Thymeleaf
+
+In your `courses.html` file:
+
+```html
+<tr th:each="course : ${courses}">
+    <td th:text="${course.courseName}"></td>
+    <td th:text="${course.courseCode}"></td>
+</tr>
+```
+
+Here, `${courses}` accesses the data that the Controller added using:
+
+```java
+model.addAttribute("courses", courseService.getAllCourses());
+```
+
+Spring MVC makes this data available to the Thymeleaf template during rendering.
+
+---
+
+## Difference between Spring MVC Model and Entity Model
+
+Don't confuse Spring MVC's `Model` interface with your application's Model (Entity).
+
+| Spring MVC Model | Entity Model |
+|---|---|
+| An interface provided by Spring MVC. | Usually a normal Java class. |
+| Used to transfer data from Controller to View. | Represents application data and database structure. |
+| Package: `org.springframework.ui.Model` | Example: `com.bsn.studentmanagement.model.Courses` |
+| Uses `addAttribute()` to add data. | Uses fields, getters, setters and JPA annotations. |
+
+Example of an Entity:
+
+```java
+@Entity
+@Table(name = "courses")
+public class Courses {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String courseName;
+    private String courseCode;
+}
+```
+
+Here, `Courses` is a Java class representing the database entity.
+
+**Important:** `Model` in Spring MVC is an interface, whereas `Courses` in your model package is a Java class.
+
+You don't need to create the Spring MVC Model object manually. Spring provides it automatically when you declare it as a controller method parameter.
+
+---
+
 ## Important interview point
 
 Remember this flow:
@@ -168,6 +275,22 @@ For example:
 View Resolver
    ↓
 templates/login.html
+```
+
+For passing data to the view:
+
+```text
+Controller
+    |
+    | model.addAttribute()
+    ↓
+Spring MVC Model
+    |
+    ↓
+Thymeleaf View
+    |
+    ↓
+HTML Page
 ```
 
 ---
@@ -195,4 +318,5 @@ src/main/resources/templates/login.html
 ```
 
 The controller is therefore **returning the logical view name**, while the **View Resolver finds the actual HTML template**.
-:::
+
+Similarly, the `Model` interface helps the controller pass dynamic data to that HTML template.
