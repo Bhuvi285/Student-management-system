@@ -3,8 +3,12 @@ package com.bsn.studentmanagement.service.impl;
 import com.bsn.studentmanagement.dto.CourseDTO;
 import com.bsn.studentmanagement.model.Courses;
 import com.bsn.studentmanagement.repository.CourseRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
+@Service
+@Transactional
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
@@ -19,5 +23,10 @@ public class CourseServiceImpl implements CourseService {
         Courses courses = mapper.map(courseDTO , Courses.class);
         courseRepository.save(courses);
         return mapper.map(courses , CourseDTO.class);
+    }
+
+    @Override
+    public boolean existsByCode(String code) {
+        return courseRepository.existsByCodeIgnoreCase(code);
     }
 }
