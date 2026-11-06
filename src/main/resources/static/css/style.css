@@ -240,9 +240,9 @@ body.sb-sidenav-toggled #sidebar-wrapper {
     }
 
     /* Adjust padding/alignment for specific cell types if needed */
-.table td {
-    padding: 0.75rem 1rem;
-}
+    .table td {
+        padding: 0.75rem 1rem;
+    }
 }
 
 /* Mobile adjustments */
