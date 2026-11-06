@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="30 seconds">
 
     <!-- Set base logging directory -->
-    <property name="LOG_DIR" value="C:/logs" />
+    <property name="LOG_DIR" value="C:/logs"/>
 
     <!-- Console appender -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
