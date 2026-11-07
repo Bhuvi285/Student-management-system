@@ -43,7 +43,7 @@ public class CourseController {
 		if(bindingResult.hasErrors()) {
 			return "add-course";
 		}
-		if(courseService.existsByCode(courseDTO.getCourseCode())) {
+		if(courseService.existsByCourseCode(courseDTO.getCourseCode())) {
 			bindingResult.rejectValue("courseCode" , "Course Must be unique");
 			return "add-course";
 
