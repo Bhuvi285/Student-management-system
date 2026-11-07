@@ -26,7 +26,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public boolean existsByCode(String code) {
-        return courseRepository.existsByCodeIgnoreCase(code);
+    public boolean existsByCourseCode(String code) {
+        return courseRepository.existsByCourseCodeIgnoreCase(code);
     }
 }
