@@ -1,6 +1,5 @@
 package com.bsn.studentmanagement.service.impl;
 
-import com.bsn.studentmanagement.controller.CourseController;
 import com.bsn.studentmanagement.dto.CourseDTO;
 import com.bsn.studentmanagement.model.Courses;
 import com.bsn.studentmanagement.repository.CourseRepository;
