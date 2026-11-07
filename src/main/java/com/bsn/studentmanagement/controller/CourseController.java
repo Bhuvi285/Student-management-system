@@ -35,7 +35,7 @@ public class CourseController {
 	}
 
 	@PostMapping
-	public String CreateCourse(@Valid @ModelAttribute("courseDTO") CourseDTO courseDTO ,
+	public String CreateCourse(@Valid @ModelAttribute("courseDto") CourseDTO courseDTO ,
 							   BindingResult bindingResult,
 							   Model model,
 							   RedirectAttributes redirectAttributes){
@@ -44,13 +44,17 @@ public class CourseController {
 			return "add-course";
 		}
 		if(courseService.existsByCourseCode(courseDTO.getCourseCode())) {
-			bindingResult.rejectValue("courseCode" , "Course Must be unique");
+			bindingResult.rejectValue(
+					"courseCode",
+					null,
+					"Course code must be unique."
+			);
 			return "add-course";
 
 		}
 
 		courseService.createCourse(courseDTO);
 		redirectAttributes.addAttribute("message" , "Course is created successfully ");
-		return "/course/list";
+		return  "redirect:/course/list";
 	}
 }

@@ -3,12 +3,7 @@ package com.bsn.studentmanagement.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "courses")
@@ -24,7 +19,7 @@ public class Courses {
 	@Column(nullable = false , unique = true)
 	private String courseCode;
 	
-	private String Duration;
+	private String duration;
 	
 	@Column(name = "active" , nullable = false)
 	private boolean active = true;
@@ -37,6 +32,11 @@ public class Courses {
 	
 	@Column(nullable = false , updatable = false)
 	private LocalDateTime createdAt;
+
+	@PrePersist
+	public void onCreate(){
+		createdAt = LocalDateTime.now();
+	}
 
 	public Long getId() {
 		return id;
@@ -63,11 +63,11 @@ public class Courses {
 	}
 
 	public String getDuration() {
-		return Duration;
+		return duration;
 	}
 
 	public void setDuration(String duration) {
-		Duration = duration;
+		this.duration = duration;
 	}
 
 	public boolean isActive() {
@@ -101,6 +101,5 @@ public class Courses {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-	
 
 }
