@@ -2,25 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/Layout :: head}">
 </head>
-
 <body>
 <div class="d-flex" id="wrapper">
     <!-- Sidebar -->
-    <div th:replace="~{fragments/Layout :: sidebar}">
-    </div>l̥l̥
+    <div th:replace="~{fragments/Layout :: sidebar}"></div>
 
-    <!-- Page Content -->l̥
+    <!-- Page Content -->
     <div id="page-content-wrapper">
         <div th:replace="~{fragments/Layout :: navbar}"></div>
 
         <div class="container-fluid px-4 py-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Courses</h2>
-                <a th:href="@{/course/new}" class="btn btn-primary"><i
-                        class="bi bi-plus-lg me-1"></i> Add New Course</a>
+                <a th:href="@{/course/new}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Add New
+                    Course</a>
             </div>
 
-            <div th:if="${message}" class="alert-danger text-center" role="alert">
+            <div th:if="${message}" class="alert alert-success text-center" role="alert" th:text="${message}">
                 Invalid username or password. Please try again.
             </div>
 
@@ -29,111 +27,97 @@
                     <i class="bi bi-table me-1"></i> Course List
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
+                    <div class="text-muted" th:if="${courses.content.isEmpty()}">No course found</div>
+                    <div class="table-responsive" th:if="${!courses.content.isEmpty()}">
                         <table class="table table-hover table-striped">
                             <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Course Name</th>
                                 <th>Course Code</th>
-                                <th>Couse Fees</th>
+                                <th>Course Fees</th>
                                 <th>Duration</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td data-label="ID">101</td>
-                                <td data-label="Course Name">Introduction to Computer
+                            <tr th:each="course: ${courses.content}">
+                                <td data-label="ID" th:text="${course.id}">101</td>
+                                <td data-label="Course Name" th:text="${course.courseName}">Introduction to Computer
                                     Science
                                 </td>
-                                <td data-label="Couse Code">ICS</td>
-                                <td data-label="Couse Fees">Rs.3999</td>
-                                <td data-label="Duration">4 Months</td>
-
-                                <td data-label="Actions"><a href="view-course.html"
-                                                            class="btn btn-sm btn-info text-white me-1" title="View"><i
-                                        class="bi bi-eye"></i></a> <a href="edit-course.html"
-                                                                      class="btn btn-sm btn-warning text-white me-1"
-                                                                      title="Edit"><i
-                                        class="bi bi-pencil"></i></a></td>
+                                <td data-label="Course Code" th:text="${course.courseCode}">ICS</td>
+                                <td data-label="Course Fees" th:text="${course.fee}">Rs.3999</td>
+                                <td data-label="Duration" th:text="${course.duration}">4 Months</td>
+                                <td data-label="Actions">
+                                    <a th:href="@{'/course/view/' + ${course.id}}"
+                                       class="btn btn-sm btn-info text-white me-1" title="View"><i
+                                            class="bi bi-eye"></i></a>
+                                    <a th:href="@{'/course/edit/' + ${course.id}}"
+                                       class="btn btn-sm btn-warning text-white me-1" title="Edit"><i
+                                            class="bi bi-pencil"></i></a>
+                                </td>
                             </tr>
+                            <!-- Static mockup rows below can be removed in production, but keeping them valid -->
                             <tr>
                                 <td data-label="ID">102</td>
                                 <td data-label="Course Name">Web Development Bootcamp</td>
-                                <td data-label="Couse Code">WDB</td>
-                                <td data-label="Couse Fees">Rs.7999</td>
+                                <td data-label="Course Code">WDB</td>
+                                <td data-label="Course Fees">Rs.7999</td>
                                 <td data-label="Duration">6 Months</td>
-                                <td data-label="Actions"><a href="view-course.html"
-                                                            class="btn btn-sm btn-info text-white me-1" title="View"><i
-                                        class="bi bi-eye"></i></a> <a href="edit-course.html"
-                                                                      class="btn btn-sm btn-warning text-white me-1"
-                                                                      title="Edit"><i
-                                        class="bi bi-pencil"></i></a></td>
+                                <td data-label="Actions">
+                                    <a href="view-course.html" class="btn btn-sm btn-info text-white me-1" title="View"><i
+                                            class="bi bi-eye"></i></a>
+                                    <a href="edit-course.html" class="btn btn-sm btn-warning text-white me-1"
+                                       title="Edit"><i class="bi bi-pencil"></i></a>
+                                </td>
                             </tr>
                             <tr>
                                 <td data-label="ID">103</td>
                                 <td data-label="Course Name">Data Structures & Algorithms</td>
-                                <td data-label="Couse Code">DSA</td>
-                                <td data-label="Couse Fees">Rs.5999</td>
+                                <td data-label="Course Code">DSA</td>
+                                <td data-label="Course Fees">Rs.5999</td>
                                 <td data-label="Duration">5 Months</td>
-                                <td data-label="Actions"><a href="view-course.html"
-                                                            class="btn btn-sm btn-info text-white me-1" title="View"><i
-                                        class="bi bi-eye"></i></a> <a href="edit-course.html"
-                                                                      class="btn btn-sm btn-warning text-white me-1"
-                                                                      title="Edit"><i
-                                        class="bi bi-pencil"></i></a></td>
+                                <td data-label="Actions">
+                                    <a href="view-course.html" class="btn btn-sm btn-info text-white me-1" title="View"><i
+                                            class="bi bi-eye"></i></a>
+                                    <a href="edit-course.html" class="btn btn-sm btn-warning text-white me-1"
+                                       title="Edit"><i class="bi bi-pencil"></i></a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
-                    <nav aria-label="Course pagination">
+
+                    <nav th:if="${courses != null and courses.totalPages >= 1}" aria-label="Course pagination">
                         <ul class="pagination justify-content-end">
 
-                            <!-- Previous -->
-                            <li class="page-item"><a class="page-link"
-                                                     href="/courses?page=1&size=10">Previous</a></li>
+                            <!-- Previous Button -->
+                            <li class="page-item" th:classappend="${courses.first} ? 'disabled'">
+                                <a class="page-link" th:href="@{/course/list(page=${courses.number > 0 ? courses.number - 1 : 0}, size=${courses.size})}">Previous</a>
+                            </li>
 
-                            <!-- Page numbers -->
-                            <li class="page-item"><a class="page-link"
-                                                     href="/courses?page=0&size=10">1</a></li>
+                            <!-- Page Numbers Loop (Calculates safely for 1 or more pages) -->
+                            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, courses.totalPages - 1)}"
+                                th:classappend="${pageNum == courses.number} ? 'active' : ''">
+                                <a class="page-link" th:href="@{/course/list(page=${pageNum}, size=${courses.size})}" th:text="${pageNum + 1}">1</a>
+                            </li>
 
-                            <li class="page-item"><a class="page-link"
-                                                     href="/courses?page=1&size=10">2</a></li>
-
-                            <li class="page-item active"><a class="page-link"
-                                                            href="/courses?page=2&size=10">3</a></li>
-
-                            <li class="page-item"><a class="page-link"
-                                                     href="/courses?page=3&size=10">4</a></li>
-
-                            <li class="page-item"><a class="page-link"
-                                                     href="/courses?page=4&size=10">5</a></li>
-
-                            <!-- Next -->
-                            <li class="page-item"><a class="page-link"
-                                                     href="/courses?page=3&size=10">Next</a></li>
+                            <!-- Next Button -->
+                            <li class="page-item" th:classappend="${courses.last} ? 'disabled'">
+                                <a class="page-link" th:href="@{/course/list(page=${courses.last ? courses.number : courses.number + 1}, size=${courses.size})}">Next</a>
+                            </li>
 
                         </ul>
                     </nav>
+
+
+
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    window.addEventListener('DOMContentLoaded', event => {
-        const sidebarToggle = document.body.querySelector('#sidebarToggle');
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', event => {
-                event.preventDefault();
-                document.body.classList.toggle('sb-sidenav-toggled');
-            });
-        }
-    });
-</script>
+<div th:replace="~{fragments/Layout :: scripts}"></div>
 </body>
-
 </html>
