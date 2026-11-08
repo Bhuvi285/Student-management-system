@@ -8,5 +8,12 @@ public interface CourseService {
 
     boolean existsByCourseCode(String code);
 
+    boolean existsByCourseCodeAndIdNot(String code , Long id);
+
+
     Page<CourseDTO> getCourses(int page , int size);
+
+    CourseDTO getCourseById(Long id);
+
+    CourseDTO updateCourse(Long id , CourseDTO courseDTO);
 }
