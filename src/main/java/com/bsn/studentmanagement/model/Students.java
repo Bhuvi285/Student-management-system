@@ -30,6 +30,11 @@ public class Students {
     @Column(nullable = false , updatable = false)
     private LocalDateTime createdAt;
 
+    @PrePersist
+    public void onCreate(){
+        createdAt = LocalDateTime.now();
+    }
+
     @Column(nullable = false , name = "active")
     private boolean active = true;
 
