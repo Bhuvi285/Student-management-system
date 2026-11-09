@@ -97,17 +97,5 @@ public class Students {
         this.active = active;
     }
 
-    @Override
-    public String toString() {
-        return "Students{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", address='" + address + '\'' +
-                ", createdAt=" + createdAt +
-                ", active=" + active +
-                '}';
-    }
+
 }
