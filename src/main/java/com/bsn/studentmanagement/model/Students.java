@@ -21,7 +21,7 @@ public class Students {
     @Column(nullable = false , unique = true)
     private String email;
 
-    @Column(nullable = true , unique = true)
+    @Column( unique = true)
     private String phoneNumber;
 
     @Column(length = 500)
