@@ -1,11 +1,15 @@
 package com.bsn.studentmanagement.service.impl;
 
+import com.bsn.studentmanagement.dto.CourseDTO;
 import com.bsn.studentmanagement.dto.StudentDTO;
 import com.bsn.studentmanagement.model.Students;
 import com.bsn.studentmanagement.repository.StudentRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,5 +41,12 @@ public class StudentServiceImpl implements StudentService {
         Students saved = studentRepository.save(students);
 
         return mapper.map(saved , StudentDTO.class);
+    }
+
+    @Override
+    public Page<StudentDTO> getStudents(int page, int size) {
+        log.info("list of students from: {}" , page);
+        PageRequest pageRequest = PageRequest.of(page , size , Sort.by(Sort.Direction.DESC , "id"));
+        return studentRepository.findByActiveTrue(pageRequest).map(student -> mapper.map(student , StudentDTO.class));
     }
 }
