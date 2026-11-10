@@ -21,7 +21,7 @@ public class Students {
     @Column(nullable = false , unique = true)
     private String email;
 
-    @Column( unique = true)
+    @Column
     private String phoneNumber;
 
     @Column(length = 500)
@@ -30,13 +30,14 @@ public class Students {
     @Column(nullable = false , updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false , name = "active")
+    private boolean active = true;
+
     @PrePersist
     public void onCreate(){
         createdAt = LocalDateTime.now();
+        active = true;
     }
-
-    @Column(nullable = false , name = "active")
-    private boolean active = true;
 
     public Long getId() {
         return id;
